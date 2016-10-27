@@ -2,10 +2,13 @@ package com.company;
 
 import sun.reflect.generics.tree.Tree;
 
+import javax.swing.*;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Representa un Jugador para el juego del 7 y medio.
@@ -131,20 +134,36 @@ public class Jugador
         int indice = valor + valor * c.getPalo();
         return indice;
     }
-    public Carta JuegoAutomatico(Ronda r){
-        //Estado.suma = 0;
-        Estado estadoActual = new Estado(r,this.cartas);
-        System.out.println("CANTIDAD DE ESTADOSSSSSSSan");
-        System.out.println(estadoActual.generarEspacioEstados());
-        int index = 0;
-        for (Estado e: estadoActual.getChildren()) {
-            index++;
-            System.out.println("Chances estado "+ index);
-            System.out.println(e.suma);
+
+    public Carta JuegoAutomatico(Ronda ronda, Arbol arbol, boolean soyPrimero){
+        Carta cartaAJugar = null;
+        double prob = 0;
+        if(soyPrimero){
+
+           for(Nodo hijo : arbol.getRaiz().getHijos().values()){
+               if(hijo.getProbabilidad() > prob){
+                   prob = hijo.getProbabilidad();
+                   cartaAJugar = hijo.getMesa().getUltimaCartaJugadaMaquina();
+               }
+               System.out.println(hijo.getMesa().generarCodigoMesa() + ":" + hijo.getProbabilidad());
+           }
+        }else {
+            Mesa mesa = arbol.getRaiz().getMesa();
+            Carta cartaJugadaHumano = ronda.getUltimaCartaHumano();
+            for(Carta carta : cartas){
+                Nodo hijo = arbol.getRaiz().getHijos().get(String.format("%s%s", mesa.generarCodigoMesa(), carta.generarCodigo()));
+                Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(), carta.generarCodigo(), cartaJugadaHumano.generarCodigo());
+
+                if(nieto.getProbabilidad() > prob){
+                    prob = nieto.getProbabilidad();
+                    cartaAJugar = carta;
+                }
+                System.out.println(nieto.getMesa().generarCodigoMesa() + ":" + nieto.getProbabilidad());
+
+            }
         }
-        //System.out.println(Estado.suma);
-        return this.jugarCarta(0);
+        return cartaAJugar;
     }
-    
-    
+
+
 }

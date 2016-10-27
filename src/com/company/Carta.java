@@ -170,6 +170,23 @@ public class Carta implements Comparable
                 break;
         }
     }
+
+    public String generarCodigo(){
+
+        switch (palo){
+            case Baraja.ORO:
+                return String.format("%s%s", valor, "o");
+            case Baraja.COPA:
+                return String.format("%s%s", valor, "c");
+            case Baraja.BASTO:
+                return String.format("%s%s", valor, "b");
+            case Baraja.ESPADA:
+                return String.format("%s%s", valor, "e");
+            default:
+                return "";
+        }
+    }
+
     @Override
     public String toString()
     { 

@@ -261,4 +261,13 @@ public class Ronda {
                                 this.resultados.clone(),this.mano,this.jugadorMano,this.jugadorTurno,this.resultado,this.estadoMano,this.estado);
         return clon;
     }
+
+    public Carta getUltimaCartaHumano(){
+        for (int i = 2; i >= 0; i--) {
+            if(mesa[i][0]  != null){
+                return mesa[i][0];
+            }
+        }
+        return null;
+    }
 }
