@@ -14,8 +14,8 @@ public class Nodo {
     private List<Carta> cartasEnMano;
     private Mesa mesa;
     private List<Carta> cartasEnBaraja;
-    private Integer jugados;
-    private Integer ganados;
+    private Integer jugados = 0;
+    private Integer ganados = 0;
     private boolean generadoConMano;
     private Integer cantHijos = 0;
     private Integer cantHojas = 0;
@@ -111,8 +111,8 @@ public class Nodo {
         this.ganados = mesa.ganoMaquina();
     }
 
-    public double getProbabilidad(){
-        return ganados / jugados;
+    public float getProbabilidad(){
+        return (float) ganados / jugados;
     }
 
     public void generarHijosConMano(){
@@ -131,13 +131,12 @@ public class Nodo {
                 hijo.generarHijosConBaraja();
                 cantHijos+= hijo.getCantHijos();
                 cantHojas+=hijo.getCantHojas();
-                this.jugados+=hijo.getJugados();
-                this.ganados+=hijo.getGanados();
             }else {
                 cantHojas++;
                 hijo.evaluarResultado();
-                //aca va otra cosa
             }
+            this.jugados+=hijo.getJugados();
+            this.ganados+=hijo.getGanados();
         }
     }
 
@@ -156,13 +155,12 @@ public class Nodo {
                 hijo.generarHijosConMano();
                 cantHijos+= hijo.getCantHijos();
                 cantHojas+=hijo.getCantHojas();
-                this.jugados+=hijo.getJugados();
-                this.ganados+=hijo.getGanados();
             }else {
                 cantHojas++;
                 hijo.evaluarResultado();
-                //aca va otra cosa
             }
+            this.jugados+=hijo.getJugados();
+            this.ganados+=hijo.getGanados();
         }
     }
 

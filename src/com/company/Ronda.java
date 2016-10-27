@@ -27,15 +27,32 @@ public class Ronda {
         this.estado = estado;
     }
 
-    public String printResultados() {
+    public String printResultados(Jugador humano, Jugador maquina) {
         StringBuilder sb = new StringBuilder();
-        sb.append("ganador 1ra: ");
-        sb.append(this.getResultadoMano(PRIMERA) + "\n");
-        sb.append("ganador 2ra: ");
-        sb.append(this.getResultadoMano(SEGUNDA) + "\n");
-        sb.append("ganador 3ra: ");
-        sb.append(this.getResultadoMano(TERCERA) + "\n");
+        sb.append("Ganador 1ra: ");
+        sb.append(getGanadorMano(this.getResultadoMano(PRIMERA), humano, maquina));
+        sb.append("\n");
+        sb.append("Ganador 2ra: ");
+        sb.append(getGanadorMano(this.getResultadoMano(SEGUNDA), humano, maquina));
+        sb.append("\n");
+        sb.append("Ganador 3ra: ");
+        sb.append(getGanadorMano(this.getResultadoMano(TERCERA), humano, maquina));
+        sb.append("\n");
         return sb.toString();
+    }
+
+    private String getGanadorMano(int codigoGanador, Jugador humano, Jugador maquina){
+        if(codigoGanador == 0){
+            return "Empate";
+        }
+        if(codigoGanador == 1){
+            return humano.getNombre();
+        }
+        if(codigoGanador == 2){
+            return maquina.getNombre();
+        }
+
+        return "Algo anda mal";
     }
 
     public static final int GANA_JUGADOR1 = 1;
@@ -225,8 +242,8 @@ public class Ronda {
     }
     public String toString(){
         StringBuilder  sb = new StringBuilder();
-        sb.append("Jugador 1\n");
-        sb.append("----------");
+        sb.append("Jugador Humano\n");
+        sb.append("----------\n");
         for (int i = 1; i <4 ; i++) {
             if (this.getCartaJugada(i,1) == null)
             {
@@ -237,7 +254,7 @@ public class Ronda {
             }
         }
         sb.append("+++++++++++++++\n");
-        sb.append("Jugador 2\n");
+        sb.append("Jugador Maquina\n");
         sb.append("----------\n");
         for (int i = 1; i <4 ; i++) {
             if (this.getCartaJugada(i,2) == null)

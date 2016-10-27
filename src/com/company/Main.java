@@ -12,7 +12,7 @@ public class Main {
 	// write your code here
 
         Jugador jugadorHumano = new Jugador( " ");
-        Jugador jugadorMaquina = new Jugador("MACHO ARGENTINO");
+        Jugador jugadorMaquina = new Jugador("Jugador Maquina");
         String opcion;
         Scanner s = new Scanner(System.in);
         System.out.println("Ingrese su nombre");
@@ -98,7 +98,7 @@ public class Main {
                 jugadorMano = 1;
             jugadorHumano.soltarCartas();
             jugadorMaquina.soltarCartas();
-            System.out.println(ronda.printResultados());
+            System.out.println(ronda.printResultados(jugadorHumano, jugadorMaquina));
             System.out.println("Desea Jugar de nuevo? (Ingrese S o s para jugar de nuevo, cualquier otra cosa para finalizar");
             opcion = s.nextLine();
 

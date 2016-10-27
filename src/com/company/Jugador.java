@@ -137,7 +137,7 @@ public class Jugador
 
     public Carta JuegoAutomatico(Ronda ronda, Arbol arbol, boolean soyPrimero){
         Carta cartaAJugar = null;
-        double prob = 0;
+        float prob = 0.0f;
         if(soyPrimero){
 
            for(Nodo hijo : arbol.getRaiz().getHijos().values()){
@@ -152,7 +152,7 @@ public class Jugador
             Carta cartaJugadaHumano = ronda.getUltimaCartaHumano();
             for(Carta carta : cartas){
                 Nodo hijo = arbol.getRaiz().getHijos().get(String.format("%s%s", mesa.generarCodigoMesa(), carta.generarCodigo()));
-                Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(), carta.generarCodigo(), cartaJugadaHumano.generarCodigo());
+                Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(), carta.generarCodigo(), cartaJugadaHumano.generarCodigo()));
 
                 if(nieto.getProbabilidad() > prob){
                     prob = nieto.getProbabilidad();
@@ -162,6 +162,7 @@ public class Jugador
 
             }
         }
+        cartas.remove(cartaAJugar);
         return cartaAJugar;
     }
 
