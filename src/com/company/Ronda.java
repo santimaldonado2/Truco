@@ -146,7 +146,7 @@ public class Ronda {
     public static final int SEGUNDA = 2;
     public static final int TERCERA = 3;
     
-    private Carta getCartaJugada(int mano, int jugador){
+    public Carta getCartaJugada(int mano, int jugador){
         return this.mesa[mano - 1][jugador -1];
     }
     
@@ -286,5 +286,9 @@ public class Ronda {
             }
         }
         return null;
+    }
+
+    public boolean pcEsPrimeraEnMano(){
+        return this.jugadorTurno == this.GANA_JUGADOR2 && this.getCartaJugada(this.mano,this.GANA_JUGADOR1) == null;
     }
 }

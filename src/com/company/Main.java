@@ -30,26 +30,19 @@ public class Main {
                 jugadorMaquina.recibir(baraja.pedir());
             }
 
-            System.out.println("generando arbol chabon");
-            int hola = 1;
-            for (Carta c: jugadorMaquina.getCartas()) {
-                hola++;
-                System.out.println("["+ hola + "]" + c);
-            }
-
             List<Carta> nuevaBaraja = baraja.getMazo();
             nuevaBaraja.addAll(jugadorHumano.getCartas());
 
             Arbol arbol = new Arbol(new Nodo(jugadorMaquina.getCartas(), new Mesa(), nuevaBaraja, false));
             arbol.generarArbol();
-            System.out.println("\n termine el arbol chabon");
+
 
             while(ronda.getEstado() == Ronda.ACTIVA){
 
                 while(ronda.getEstadoMano() == Ronda.EN_JUEGO)
                 {
                     if (ronda.getJugadorTurno() == 1){
-                        System.out.println("Su turno");
+                        System.out.println("Su turno "+ jugadorHumano.getNombre());
                         System.out.println("Estas son sus cartas");
                         int index = 0;
                         for (Carta c: jugadorHumano.getCartas()) {
@@ -66,18 +59,23 @@ public class Main {
                     else
                     {
                         System.out.println("TURNO "+jugadorMaquina.getNombre());
-                        int index = 0;
+                        /*int index = 0;
                         for (Carta c: jugadorMaquina.getCartas()) {
                             index++;
                             System.out.println("["+ index + "]" + c);
-                        }
-                        ronda.jugarCarta(jugadorMaquina.JuegoAutomatico(ronda, arbol, false));
+                        }*/
+                        ronda.jugarCarta(jugadorMaquina.JuegoAutomatico(ronda, arbol, ronda.pcEsPrimeraEnMano()));
 //                        ronda.jugarCarta(j2.jugarCarta(0));
                         System.out.println(ronda);
                         //Thread.sleep(2000);
                     }
                 }
+                //TRUNCO EL ARBOL, PRIMERO AL ESTADO CON MI CARTA JUGADA
+                arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(),2));
+                //Y DESPUES AL ESTADO CON AMBAS CARTAS JUGADAS
+                arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(),1));
                 ronda.avanzarMano();
+
 
             }
             switch (ronda.getResultado()){
@@ -103,6 +101,7 @@ public class Main {
             opcion = s.nextLine();
 
         }
-        while(opcion != "S" && opcion != "s");
+        while(opcion != "S" || opcion != "s");
     }
+
 }

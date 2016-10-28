@@ -24,4 +24,10 @@ public class Arbol {
         System.out.println("nodos " + raiz.getCantHijos());
         System.out.println("hojas " + raiz.getCantHojas());
     }
+
+    public void MoverAHijo(Carta cartaJugada){
+        String codigo = raiz.getMesa().generarCodigoMesa();
+        codigo += cartaJugada.generarCodigo();
+        raiz = raiz.hijos.get(codigo);
+    }
 }

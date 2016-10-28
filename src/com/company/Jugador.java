@@ -145,6 +145,14 @@ public class Jugador
                    prob = hijo.getProbabilidad();
                    cartaAJugar = hijo.getMesa().getUltimaCartaJugadaMaquina();
                }
+                /*modifico la logica, en el caso que tenga las mismas probabilidades en dos opciones, te juega la mas chota,
+                onda para dejarte pasar en segunda y culiarte en tercera
+                O si no hay ninguna carta jugada y ya perdiste, para que te juegue alguna porque sino no te juega nada*/
+               else if ((hijo.getProbabilidad() == prob && hijo.getMesa().getUltimaCartaJugadaMaquina().compareTo(cartaAJugar) <= 0) || cartaAJugar == null)
+               {
+                   prob = hijo.getProbabilidad();
+                   cartaAJugar = hijo.getMesa().getUltimaCartaJugadaMaquina();
+               }
                System.out.println(hijo.getMesa().generarCodigoMesa() + ":" + hijo.getProbabilidad());
            }
         }else {
@@ -158,6 +166,15 @@ public class Jugador
                     prob = nieto.getProbabilidad();
                     cartaAJugar = carta;
                 }
+                /*modifico la logica, en el caso que tenga las mismas probabilidades en dos opciones, te juega la mas chota,
+                onda para dejarte pasar en segunda y culiarte en tercera
+                O si no hay ninguna carta jugada y ya perdiste, para que te juegue alguna porque sino no te juega nada*/
+                else if ((nieto.getProbabilidad() == prob && carta.compareTo(cartaAJugar) <= 0) || cartaAJugar == null)
+                {
+                    prob = nieto.getProbabilidad();
+                    cartaAJugar = carta;
+                }
+
                 System.out.println(nieto.getMesa().generarCodigoMesa() + ":" + nieto.getProbabilidad());
 
             }
