@@ -91,7 +91,7 @@ public class Main {
                         ronda.jugarCarta(jugadorMaquina.JuegoAutomatico(ronda, arbol, ronda.pcEsPrimeraEnMano()));
 //                        ronda.jugarCarta(j2.jugarCarta(0));
                         System.out.println(ronda);
-                        //Thread.sleep(2000);
+                        Thread.sleep(2000);
                     }
                     graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
                     graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
@@ -103,15 +103,19 @@ public class Main {
                 arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(), 1));
                 ronda.avanzarMano();
             }
+            String resultado = "";
             switch (ronda.getResultado()) {
                 case Ronda.GANA_JUGADOR1:
-                    System.out.println("GANADOR " + jugadorHumano.getNombre());
+                    resultado = "GANADOR " + jugadorHumano.getNombre();
+//                    System.out.println("GANADOR " + jugadorHumano.getNombre());
                     break;
                 case Ronda.GANA_JUGADOR2:
-                    System.out.println("GANADOR " + jugadorMaquina.getNombre());
+                    resultado = "GANADOR " + jugadorMaquina.getNombre();
+//                    System.out.println("GANADOR " + jugadorMaquina.getNombre());
                     break;
                 default:
-                    System.out.println("ALGO ANDA MAL");
+                    resultado = "ALGO ANDA MAL";
+//                    System.out.println("ALGO ANDA MAL");
                     break;
             }
             if (jugadorMano == 1) {
@@ -122,7 +126,7 @@ public class Main {
             jugadorMaquina.soltarCartas();
             System.out.println(ronda.printResultados(jugadorHumano, jugadorMaquina));
             op = JOptionPane.showOptionDialog(graficador.getV(),
-                    ronda.printResultados(jugadorHumano, jugadorMaquina) + "\n¿Desea volver a jugar?",
+                    resultado + "\n" + ronda.printResultados(jugadorHumano, jugadorMaquina) + "\n¿Desea volver a jugar?",
                     "Ronda Finalizada",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
