@@ -39,6 +39,10 @@ public class Jugador
     public LinkedList<Carta> getCartas(){
         return cartas;
     }
+
+    public int getCantidadCartas(){
+        return cartas.size();
+    }
     
     
     /**
@@ -169,7 +173,7 @@ public class Jugador
                 /*modifico la logica, en el caso que tenga las mismas probabilidades en dos opciones, te juega la mas chota,
                 onda para dejarte pasar en segunda y culiarte en tercera
                 O si no hay ninguna carta jugada y ya perdiste, para que te juegue alguna porque sino no te juega nada*/
-                else if ((nieto.getProbabilidad() == prob && carta.compareTo(cartaAJugar) <= 0) || cartaAJugar == null)
+                else if (cartaAJugar == null || (nieto.getProbabilidad() == prob && (carta.compareTo(cartaAJugar) <= 0)))
                 {
                     prob = nieto.getProbabilidad();
                     cartaAJugar = carta;

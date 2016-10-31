@@ -195,7 +195,7 @@ public class Carta implements Comparable
         if( palo == Baraja.ORO ) p = "Oro";
         if( palo == Baraja.COPA ) p = "Copa";
         
-        return "{" + valor + " de " + p + "}";
+        return valor + " de " + p;
     }
 
     @Override
