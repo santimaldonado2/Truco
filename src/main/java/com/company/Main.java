@@ -40,7 +40,7 @@ public class Main {
             System.out.println("dibujada");
             ronda.init(jugadorMano);
 
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++) {
                 Carta cartaHumano = baraja.pedir();
                 jugadorHumano.recibir(cartaHumano);
                 // graficador.dibujarCarta(cartaHumano, true, i);
@@ -49,6 +49,7 @@ public class Main {
                 jugadorMaquina.recibir(cartaMaquina);
                 // graficador.dibujarCarta(cartaMaquina, false, i);
             }
+
             graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
             graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
 
@@ -61,13 +62,13 @@ public class Main {
             while (ronda.getEstado() == Ronda.ACTIVA) {
 
                 while (ronda.getEstadoMano() == Ronda.EN_JUEGO) {
-                    if(ronda.getJugadorTurno() == 1) {
+                    if (ronda.getJugadorTurno() == 1) {
                         System.out.println("Su turno " + jugadorHumano.getNombre());
                         System.out.println("Estas son sus cartas");
                         int index = 0;
                         int cantidadCartasEnMano = jugadorHumano.getCantidadCartas();
                         Object[] options = new Object[cantidadCartasEnMano];
-                        for(Carta c : jugadorHumano.getCartas()) {
+                        for (Carta c : jugadorHumano.getCartas()) {
                             options[index] = c.toString();
                             index++;
                             System.out.println("[" + index + "]" + c);
@@ -84,9 +85,13 @@ public class Main {
                         System.out.println(ronda);
                     } else {
 
+                        // Calculo el puntaje del envido en esta mano
+                        jugadorMaquina.calcularPuntosEnvido();
+
                         // Aca voy a decidir si canto envido o no
-                        if(ronda.getMano() == Ronda.PRIMERA && (jugadorMaquina.jugarEnvido()
-                                || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal(27))) {
+                        if (ronda.getMano() == Ronda.PRIMERA && (jugadorMaquina.jugarEnvido()
+                                || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
+
                             // TODO:aca se juega el envido, habría que hacer la
                             // comparación entre los puntajes y se guarda el
                             // puntaje en en la DB
@@ -98,7 +103,7 @@ public class Main {
 
                         System.out.println("TURNO " + jugadorMaquina.getNombre());
                         int index = 0;
-                        for(Carta c : jugadorMaquina.getCartas()) {
+                        for (Carta c : jugadorMaquina.getCartas()) {
                             index++;
                             System.out.println("[" + index + "]" + c);
                         }
@@ -119,22 +124,22 @@ public class Main {
             }
             String resultado = "";
             switch (ronda.getResultado()) {
-                case Ronda.GANA_JUGADOR1:
-                    resultado = "GANADOR " + jugadorHumano.getNombre();
-                    // System.out.println("GANADOR " +
-                    // jugadorHumano.getNombre());
-                    break;
-                case Ronda.GANA_JUGADOR2:
-                    resultado = "GANADOR " + jugadorMaquina.getNombre();
-                    // System.out.println("GANADOR " +
-                    // jugadorMaquina.getNombre());
-                    break;
-                default:
-                    resultado = "ALGO ANDA MAL";
-                    // System.out.println("ALGO ANDA MAL");
-                    break;
+            case Ronda.GANA_JUGADOR1:
+                resultado = "GANADOR " + jugadorHumano.getNombre();
+                // System.out.println("GANADOR " +
+                // jugadorHumano.getNombre());
+                break;
+            case Ronda.GANA_JUGADOR2:
+                resultado = "GANADOR " + jugadorMaquina.getNombre();
+                // System.out.println("GANADOR " +
+                // jugadorMaquina.getNombre());
+                break;
+            default:
+                resultado = "ALGO ANDA MAL";
+                // System.out.println("ALGO ANDA MAL");
+                break;
             }
-            if(jugadorMano == 1) {
+            if (jugadorMano == 1) {
                 jugadorMano = 2;
             } else
                 jugadorMano = 1;

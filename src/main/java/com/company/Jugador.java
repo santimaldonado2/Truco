@@ -60,7 +60,7 @@ public class Jugador {
      */
     public Jugador(String nom) {
         cartas = new LinkedList<Carta>();
-        if(nom == null)
+        if (nom == null)
             nom = "No disponible";
         nombre = nom;
     }
@@ -127,10 +127,10 @@ public class Jugador {
 
     public Carta jugarCarta(int num) {
         Carta c = null;
-        if(num < cartas.size()) {
+        if (num < cartas.size()) {
             c = cartas.remove(num);
         } else {
-            if(!cartas.isEmpty()) {
+            if (!cartas.isEmpty()) {
                 c = cartas.removeFirst();
             }
         }
@@ -150,7 +150,7 @@ public class Jugador {
 
     private int getIndiceEnBarajaOrdenada(Carta c) {
         int valor = c.getValor();
-        if(valor > 7) {
+        if (valor > 7) {
             valor = valor - 3;
         }
         int indice = valor + valor * c.getPalo();
@@ -160,10 +160,10 @@ public class Jugador {
     public Carta JuegoAutomatico(Ronda ronda, Arbol arbol, boolean soyPrimero) {
         Carta cartaAJugar = null;
         float prob = 0.0f;
-        if(soyPrimero) {
+        if (soyPrimero) {
 
-            for(Nodo hijo : arbol.getRaiz().getHijos().values()) {
-                if(hijo.getProbabilidad() > prob) {
+            for (Nodo hijo : arbol.getRaiz().getHijos().values()) {
+                if (hijo.getProbabilidad() > prob) {
                     prob = hijo.getProbabilidad();
                     cartaAJugar = hijo.getMesa().getUltimaCartaJugadaMaquina();
                 }
@@ -174,7 +174,7 @@ public class Jugador {
                  * hay ninguna carta jugada y ya perdiste, para que te juegue
                  * alguna porque sino no te juega nada
                  */
-                else if((hijo.getProbabilidad() == prob
+                else if ((hijo.getProbabilidad() == prob
                         && hijo.getMesa().getUltimaCartaJugadaMaquina().compareTo(cartaAJugar) <= 0)
                         || cartaAJugar == null) {
                     prob = hijo.getProbabilidad();
@@ -185,13 +185,13 @@ public class Jugador {
         } else {
             Mesa mesa = arbol.getRaiz().getMesa();
             Carta cartaJugadaHumano = ronda.getUltimaCartaHumano();
-            for(Carta carta : cartas) {
+            for (Carta carta : cartas) {
                 Nodo hijo = arbol.getRaiz().getHijos()
                         .get(String.format("%s%s", mesa.generarCodigoMesa(), carta.generarCodigo()));
                 Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(),
                         carta.generarCodigo(), cartaJugadaHumano.generarCodigo()));
 
-                if(nieto.getProbabilidad() > prob) {
+                if (nieto.getProbabilidad() > prob) {
                     prob = nieto.getProbabilidad();
                     cartaAJugar = carta;
                 }
@@ -202,7 +202,7 @@ public class Jugador {
                  * hay ninguna carta jugada y ya perdiste, para que te juegue
                  * alguna porque sino no te juega nada
                  */
-                else if(cartaAJugar == null
+                else if (cartaAJugar == null
                         || (nieto.getProbabilidad() == prob && (carta.compareTo(cartaAJugar) <= 0))) {
                     prob = nieto.getProbabilidad();
                     cartaAJugar = carta;
@@ -220,17 +220,17 @@ public class Jugador {
 
         int[] puntajesCarta = new int[3];
         int valor;
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             valor = cartas.get(i).getValor();
-            if(valor > 7)
+            if (valor > 7)
                 valor = 0;
 
             puntajesCarta[i] = valor;
         }
 
-        if(puntajesCarta[0] >= puntajesCarta[2] && puntajesCarta[1] >= puntajesCarta[2])
+        if (puntajesCarta[0] >= puntajesCarta[2] && puntajesCarta[1] >= puntajesCarta[2])
             return 20 + puntajesCarta[0] + puntajesCarta[1];
-        else if(puntajesCarta[0] >= puntajesCarta[1] && puntajesCarta[2] >= puntajesCarta[1])
+        else if (puntajesCarta[0] >= puntajesCarta[1] && puntajesCarta[2] >= puntajesCarta[1])
             return 20 + puntajesCarta[0] + puntajesCarta[2];
         else
             return 20 + puntajesCarta[1] + puntajesCarta[2];
@@ -246,27 +246,27 @@ public class Jugador {
         int valor;
         int puntaje = 0;
 
-        for(Carta carta : cartas) {
+        for (Carta carta : cartas) {
             palo = carta.getPalo();
             valor = carta.getValor();
-            if(valor > 7)
+            if (valor > 7)
                 puntosPorPalo[0][palo] += 0;
             else
                 puntosPorPalo[0][palo] += valor;
 
             puntosPorPalo[1][palo] += 1;
 
-            if(puntosPorPalo[1][palo] == 2)
+            if (puntosPorPalo[1][palo] == 2)
                 puntosPorPalo[0][palo] += 20;
-            else if(puntosPorPalo[1][palo] == 3) {
+            else if (puntosPorPalo[1][palo] == 3) {
                 puntaje = this.calcularPuntosCon3CartasDelMismoPalo();
             }
 
         }
 
-        if(puntaje == 0) {
-            for(int i = 0; i < puntosPorPalo[0].length; i++) {
-                if(puntosPorPalo[0][i] >= puntaje) {
+        if (puntaje == 0) {
+            for (int i = 0; i < puntosPorPalo[0].length; i++) {
+                if (puntosPorPalo[0][i] >= puntaje) {
                     puntaje = puntosPorPalo[0][i];
                 }
             }
@@ -302,6 +302,21 @@ public class Jugador {
      */
     public boolean jugarEnvidoEnBaseAPuntosRegresionLineal(double puntos) {
         double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntos);
+        System.out.println("probabilidad " + prob);
+
+        return confianza < prob;
+    }
+
+    /**
+     * Determina si la maquina si juega el envido o no con los puntos que tiene.
+     * 
+     * @param puntos
+     *            puntos que tiene la maquina para jugar el envido.
+     * @return true si juega el envido, false en cualquier otro caso.
+     */
+    public boolean jugarEnvidoEnBaseAPuntosRegresionLineal() {
+        System.out.println("puntos envido: " + puntosEnvido);
+        double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido);
         System.out.println("probabilidad " + prob);
 
         return confianza < prob;

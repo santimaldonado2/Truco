@@ -1,8 +1,5 @@
 package com.company;
 
-
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +16,6 @@ public class Nodo {
     private boolean generadoConMano;
     private Integer cantHijos = 0;
     private Integer cantHojas = 0;
-
-
 
     public Nodo(List<Carta> cartasEnMano, Mesa mesa, List<Carta> cartasEnBaraja, boolean generadoConMano) {
         this.cartasEnMano = cartasEnMano;
@@ -70,7 +65,7 @@ public class Nodo {
         this.ganados = ganados;
     }
 
-    public boolean isHoja(){
+    public boolean isHoja() {
         return hijos.isEmpty();
     }
 
@@ -106,17 +101,17 @@ public class Nodo {
         this.cantHojas = cantHojas;
     }
 
-    public void evaluarResultado(){
+    public void evaluarResultado() {
         this.jugados = 1;
         this.ganados = mesa.ganoMaquina();
     }
 
-    public float getProbabilidad(){
+    public float getProbabilidad() {
         return (float) ganados / jugados;
     }
 
-    public void generarHijosConMano(){
-        for(Carta carta : cartasEnMano) {
+    public void generarHijosConMano() {
+        for (Carta carta : cartasEnMano) {
 
             List<Carta> cartasRestantesEnMano = new ArrayList<>();
             cartasRestantesEnMano.addAll(cartasEnMano);
@@ -127,21 +122,21 @@ public class Nodo {
 
             cantHijos++;
 
-            if(!hijo.getMesa().isFull()){
+            if (!hijo.getMesa().isFull()) {
                 hijo.generarHijosConBaraja();
-                cantHijos+= hijo.getCantHijos();
-                cantHojas+=hijo.getCantHojas();
-            }else {
+                cantHijos += hijo.getCantHijos();
+                cantHojas += hijo.getCantHojas();
+            } else {
                 cantHojas++;
                 hijo.evaluarResultado();
             }
-            this.jugados+=hijo.getJugados();
-            this.ganados+=hijo.getGanados();
+            this.jugados += hijo.getJugados();
+            this.ganados += hijo.getGanados();
         }
     }
 
-    public void generarHijosConBaraja(){
-        for(Carta carta : cartasEnBaraja) {
+    public void generarHijosConBaraja() {
+        for (Carta carta : cartasEnBaraja) {
 
             List<Carta> barajaRestante = new ArrayList<>();
             barajaRestante.addAll(cartasEnBaraja);
@@ -151,16 +146,16 @@ public class Nodo {
             hijos.put(hijo.getMesa().generarCodigoMesa(), hijo);
             cantHijos++;
 
-            if(!hijo.getMesa().isFull()){
+            if (!hijo.getMesa().isFull()) {
                 hijo.generarHijosConMano();
-                cantHijos+= hijo.getCantHijos();
-                cantHojas+=hijo.getCantHojas();
-            }else {
+                cantHijos += hijo.getCantHijos();
+                cantHojas += hijo.getCantHojas();
+            } else {
                 cantHojas++;
                 hijo.evaluarResultado();
             }
-            this.jugados+=hijo.getJugados();
-            this.ganados+=hijo.getGanados();
+            this.jugados += hijo.getJugados();
+            this.ganados += hijo.getGanados();
         }
     }
 
