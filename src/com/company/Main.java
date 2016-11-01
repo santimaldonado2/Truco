@@ -43,6 +43,8 @@ public class Main {
                 jugadorMaquina.recibir(cartaMaquina);
 //                graficador.dibujarCarta(cartaMaquina, false, i);
             }
+            jugadorHumano.calcularPuntosEnvido();
+            jugadorMaquina.calcularPuntosEnvido();
             graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
             graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
 
@@ -67,6 +69,8 @@ public class Main {
                             index++;
                             System.out.println("[" + index + "]" + c);
                         }
+                        if(ronda.getMano() == 1)
+                            System.out.println("SUS PUNTOS DEL ENVIDO SON: " + jugadorHumano.getPuntosEnvido());
 //                        System.out.println("Ingrese la carta que quiere jugar");
 //                        int num_carta = Integer.parseInt(s.nextLine());
 
@@ -88,6 +92,8 @@ public class Main {
                             index++;
                             System.out.println("[" + index + "]" + c);
                         }
+                        if(ronda.getMano() == 1)
+                            System.out.println("SUS PUNTOS DEL ENVIDO SON: " + jugadorMaquina.getPuntosEnvido());
                         ronda.jugarCarta(jugadorMaquina.JuegoAutomatico(ronda, arbol, ronda.pcEsPrimeraEnMano()));
 //                        ronda.jugarCarta(j2.jugarCarta(0));
                         System.out.println(ronda);
@@ -126,7 +132,9 @@ public class Main {
             jugadorMaquina.soltarCartas();
             System.out.println(ronda.printResultados(jugadorHumano, jugadorMaquina));
             op = JOptionPane.showOptionDialog(graficador.getV(),
-                    resultado + "\n" + ronda.printResultados(jugadorHumano, jugadorMaquina) + "\n¿Desea volver a jugar?",
+                    resultado + "\n" + ronda.printResultados(jugadorHumano, jugadorMaquina)
+                            + "\nPuntos Maquina: "+ jugadorMaquina.getPuntosEnvido()
+                            + "\nPuntos Humano: "+ jugadorHumano.getPuntosEnvido()+"\n¿Desea volver a jugar?",
                     "Ronda Finalizada",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,

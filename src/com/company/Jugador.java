@@ -32,6 +32,10 @@ public class Jugador
      * El nombre del jugador.
      */
     private String nombre;
+
+
+
+    private int puntosEnvido;
     
     /**
      * La situacion del jugador. Cada jugador puede plantarse, continuar o pasarse seg�n el momento del juego.
@@ -106,6 +110,14 @@ public class Jugador
     public void recibir( Carta c )
     {
        cartas.addLast(c);
+    }
+
+    public int getPuntosEnvido() {
+        return puntosEnvido;
+    }
+
+    public void setPuntosEnvido(int puntosEnvido) {
+        this.puntosEnvido = puntosEnvido;
     }
 
     public Carta jugarCarta(int num){
@@ -186,6 +198,71 @@ public class Jugador
         cartas.remove(cartaAJugar);
         return cartaAJugar;
     }
+
+    public int calcularPuntosCon3CartasDelMismoPalo()
+    {
+
+        int[] puntajesCarta = new int[3];
+        int valor;
+        for (int i = 0; i < 3 ; i++) {
+            valor = cartas.get(i).getValor();
+            if(valor > 7 )
+                valor = 0;
+
+            puntajesCarta[i] = valor;
+        }
+
+        if (puntajesCarta[0] >= puntajesCarta[2] && puntajesCarta[1] >= puntajesCarta[2])
+            return 20+puntajesCarta[0]+puntajesCarta[1];
+        else if (puntajesCarta[0] >= puntajesCarta[1] && puntajesCarta[2] >= puntajesCarta[1])
+            return 20+puntajesCarta[0]+puntajesCarta[2];
+        else
+            return 20+puntajesCarta[1]+puntajesCarta[2];
+
+
+    }
+
+    public void calcularPuntosEnvido(){
+        //la matriz de 2*4 tiene una columna por palo, y dos filas
+        //en la primera guarda los puntos, y en la segunda la cantidad de cartas con ese palo
+        int[][] puntosPorPalo = new int[2][4];
+        int palo;
+        int valor;
+        int puntaje =0;
+
+
+
+        for (Carta carta: cartas) {
+            palo = carta.getPalo();
+            valor = carta.getValor();
+            if (valor > 7)
+                puntosPorPalo[0][palo]+=0;
+            else
+                puntosPorPalo[0][palo]+=valor;
+
+            puntosPorPalo[1][palo]+=1;
+
+            if (puntosPorPalo[1][palo] ==2)
+                puntosPorPalo[0][palo]+=20;
+            else if(puntosPorPalo[1][palo] ==3){
+                puntaje = this.calcularPuntosCon3CartasDelMismoPalo();
+            }
+
+        }
+
+        if (puntaje == 0) {
+            for (int i = 0; i < puntosPorPalo[0].length; i++) {
+                if (puntosPorPalo[0][i] >= puntaje) {
+                    puntaje = puntosPorPalo[0][i];
+                }
+            }
+        }
+
+
+        this.puntosEnvido = puntaje;
+    }
+
+
 
 
 }
