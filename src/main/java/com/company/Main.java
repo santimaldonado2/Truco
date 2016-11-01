@@ -6,6 +6,7 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 import com.company.ui.Graficador;
+import com.company.utils.GestorEnvido;
 import com.company.utils.LinearRegression;
 
 public class Main {
@@ -17,7 +18,12 @@ public class Main {
         Jugador jugadorMaquina = new Jugador("Jugador Maquina");
 
         // Aca seteamos la confianza de la maquina para jugar.
-        jugadorMaquina.setConfianza(0.85);
+        jugadorMaquina.setConfianza_envido(0.60);
+        jugadorMaquina.setConfianza_envido_envido(0.65);
+        jugadorMaquina.setConfianza_real_envido(0.75);
+        jugadorMaquina.setConfianza_falta_envido(0.8);
+
+        jugadorMaquina.setNivel_mentira(0.7);
 
         // String opcion;
         int op = 0;
@@ -32,10 +38,10 @@ public class Main {
             // Aca cargamos todas las probabilidades para el calculo de la
             // regresion
             LinearRegression.cargarDatos();
-
             Baraja baraja = new Baraja(Baraja.REDUCIDA, true);
             Ronda ronda = new Ronda();
             Graficador graficador = new Graficador();
+            GestorEnvido gestorEnvido = new GestorEnvido(jugadorHumano, jugadorMaquina, jugadorMano, graficador);
             graficador.dibujarVentana();
             System.out.println("dibujada");
             ronda.init(jugadorMano);
@@ -49,7 +55,8 @@ public class Main {
                 jugadorMaquina.recibir(cartaMaquina);
                 // graficador.dibujarCarta(cartaMaquina, false, i);
             }
-
+            jugadorMaquina.calcularPuntosEnvido();
+            jugadorHumano.calcularPuntosEnvido();
             graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
             graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
 
@@ -76,6 +83,17 @@ public class Main {
                         // System.out.println("Ingrese la carta que quiere
                         // jugar");
                         // int num_carta = Integer.parseInt(s.nextLine());
+                        if (ronda.getMano() == 1) {
+                            if (gestorEnvido.getEstado() == GestorEnvido.SIN_CANTAR) {
+                                int cantaEnvido = JOptionPane.showOptionDialog(graficador.getV(),
+                                        "Â¿Desea cantar Envido?",
+                                        "Cantar Envido", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                                if (cantaEnvido == JOptionPane.YES_OPTION) {
+                                    gestorEnvido.cantarEnvido(GestorEnvido.JUGADOR_HUMANO);
+                                }
+                            }
+                        }
+
 
                         int num_carta = JOptionPane.showOptionDialog(graficador.getV(),
                                 "Es su turno. Â¿QuÃ© carta desea tirar?", "Su turno", JOptionPane.DEFAULT_OPTION,
@@ -86,14 +104,15 @@ public class Main {
                     } else {
 
                         // Calculo el puntaje del envido en esta mano
-                        jugadorMaquina.calcularPuntosEnvido();
+
 
                         // Aca voy a decidir si canto envido o no
-                        if (ronda.getMano() == Ronda.PRIMERA && (jugadorMaquina.jugarEnvido()
-                                || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
-
-                            // TODO:aca se juega el envido, habría que hacer la
-                            // comparación entre los puntajes y se guarda el
+                        if (ronda.getMano() == Ronda.PRIMERA) {
+                            if ((gestorEnvido.getEstado() == GestorEnvido.SIN_CANTAR) && (jugadorMaquina.jugarEnvido() || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
+                                gestorEnvido.cantarEnvido(GestorEnvido.JUGADOR_MAQUINA);
+                            }
+                            // TODO:aca se juega el envido, habrï¿½a que hacer la
+                            // comparaciï¿½n entre los puntajes y se guarda el
                             // puntaje en en la DB
 
                             // LinearRegression.agregarDatos(puntos, ganado);
@@ -124,20 +143,20 @@ public class Main {
             }
             String resultado = "";
             switch (ronda.getResultado()) {
-            case Ronda.GANA_JUGADOR1:
-                resultado = "GANADOR " + jugadorHumano.getNombre();
-                // System.out.println("GANADOR " +
-                // jugadorHumano.getNombre());
-                break;
-            case Ronda.GANA_JUGADOR2:
-                resultado = "GANADOR " + jugadorMaquina.getNombre();
-                // System.out.println("GANADOR " +
-                // jugadorMaquina.getNombre());
-                break;
-            default:
-                resultado = "ALGO ANDA MAL";
-                // System.out.println("ALGO ANDA MAL");
-                break;
+                case Ronda.GANA_JUGADOR1:
+                    resultado = "GANADOR " + jugadorHumano.getNombre();
+                    // System.out.println("GANADOR " +
+                    // jugadorHumano.getNombre());
+                    break;
+                case Ronda.GANA_JUGADOR2:
+                    resultado = "GANADOR " + jugadorMaquina.getNombre();
+                    // System.out.println("GANADOR " +
+                    // jugadorMaquina.getNombre());
+                    break;
+                default:
+                    resultado = "ALGO ANDA MAL";
+                    // System.out.println("ALGO ANDA MAL");
+                    break;
             }
             if (jugadorMano == 1) {
                 jugadorMano = 2;
