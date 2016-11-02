@@ -48,7 +48,7 @@ public class Main {
             Ronda ronda = new Ronda();
             Graficador graficador = new Graficador();
             GestorEnvido gestorEnvido = new GestorEnvido(jugadorHumano, jugadorMaquina, jugadorMano, graficador);
-            GestorTruco gestorTruco = new GestorTruco(graficador,jugadorHumano,jugadorMaquina,jugadorMano);
+            GestorTruco gestorTruco = new GestorTruco(graficador, jugadorHumano, jugadorMaquina, jugadorMano);
             graficador.dibujarVentana();
             System.out.println("dibujada");
             ronda.init(jugadorMano);
@@ -72,8 +72,10 @@ public class Main {
 
             Arbol arbol = new Arbol(new Nodo(jugadorMaquina.getCartas(), new Mesa(), nuevaBaraja, false));
             arbol.generarArbol();
-            if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, true)); }
-            while (ronda.getEstado() == Ronda.ACTIVA && gestorTruco.getEstado() != GestorTruco.FINALIZADO ) {
+            if (mostrarProbabilidadesMaquina) {
+                graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, true));
+            }
+            while (ronda.getEstado() == Ronda.ACTIVA && gestorTruco.getEstado() != GestorTruco.FINALIZADO) {
 
                 while (ronda.getEstadoMano() == Ronda.EN_JUEGO && gestorTruco.getEstado() != GestorTruco.FINALIZADO) {
 
@@ -100,8 +102,7 @@ public class Main {
                                     gestorEnvido.cantarEnvido(GestorEnvido.JUGADOR_HUMANO);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             if (gestorTruco.trucoSinCantar()) {
 
                                 int truco = JOptionPane.showOptionDialog(graficador.getV(), "\n�Desea cantar truco ?",
@@ -109,7 +110,7 @@ public class Main {
                                         null);
 
                                 if (truco == JOptionPane.YES_OPTION) {
-                                    gestorTruco.cantarTruco(GestorTruco.JUGADOR_HUMANO,arbol,ronda,ronda.pcJugoEnEstaMano());
+                                    gestorTruco.cantarTruco(GestorTruco.JUGADOR_HUMANO, arbol, ronda, ronda.pcJugoEnEstaMano());
                                 }
 
                             }
@@ -126,23 +127,26 @@ public class Main {
                         System.out.println(ronda);
 
                         graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
-                        if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano())); }
+                        if (mostrarProbabilidadesMaquina) {
+                            graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano()));
+                        }
                     } else {
-                        if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano())); }
+                        if (mostrarProbabilidadesMaquina) {
+                            graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano()));
+                        }
                         // Calculo el puntaje del envido en esta mano
                         // Aca voy a decidir si canto envido o no
                         if (ronda.getMano() == Ronda.PRIMERA) {
                             if ((gestorEnvido.getEstado() == GestorEnvido.SIN_CANTAR)
                                     && (jugadorMaquina.mentir(jugadorMaquina.getNivel_mentira())
-                                            || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
+                                    || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
                                 gestorEnvido.cantarEnvido(GestorEnvido.JUGADOR_MAQUINA);
                             }
                             System.out.println("La maquina juega el envido");
-                        }
-                        else{
-                            if(gestorTruco.trucoSinCantar()){
-                                if(jugadorMaquina.mentir(jugadorMaquina.getNivel_mentira_truco()) || jugadorMaquina.cantarTrucoEnBaseAProbabilidad(arbol,ronda,ronda.pcEsPrimeraEnMano())){
-                                    gestorTruco.cantarTruco(GestorTruco.JUGADOR_MAQUINA,arbol,ronda,ronda.pcEsPrimeraEnMano());
+                        } else {
+                            if (gestorTruco.trucoSinCantar()) {
+                                if (jugadorMaquina.mentir(jugadorMaquina.getNivel_mentira_truco()) || jugadorMaquina.cantarTrucoEnBaseAProbabilidad(arbol, ronda, ronda.pcEsPrimeraEnMano())) {
+                                    gestorTruco.cantarTruco(GestorTruco.JUGADOR_MAQUINA, arbol, ronda, ronda.pcEsPrimeraEnMano());
                                 }
                             }
 
@@ -193,8 +197,8 @@ public class Main {
                     graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
                     graficador.dibujarMesa(ronda.getMesa());
                 }
-                if(gestorTruco.getEstado()!= GestorTruco.FINALIZADO){
-                // TRUNCO EL ARBOL, PRIMERO AL ESTADO CON MI CARTA JUGADA
+                if (gestorTruco.getEstado() != GestorTruco.FINALIZADO) {
+                    // TRUNCO EL ARBOL, PRIMERO AL ESTADO CON MI CARTA JUGADA
                     arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(), 2));
                     // Y DESPUES AL ESTADO CON AMBAS CARTAS JUGADAS
                     arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(), 1));
@@ -203,17 +207,17 @@ public class Main {
             }
             String resultado;
             switch (ronda.getResultado()) {
-            case Ronda.GANA_JUGADOR1:
-                resultado = "GANADOR " + jugadorHumano.getNombre();
-                GestorPuntajes.sumarPuntosHumano(gestorTruco.getPuntosGanados());
-                break;
-            case Ronda.GANA_JUGADOR2:
-                resultado = "GANADOR " + jugadorMaquina.getNombre();
-                GestorPuntajes.sumarPuntosMaquina(gestorTruco.getPuntosGanados());
-                break;
-            default:
-                resultado = "ALGO ANDA MAL";
-                break;
+                case Ronda.GANA_JUGADOR1:
+                    resultado = "GANADOR " + jugadorHumano.getNombre();
+                    GestorPuntajes.sumarPuntosHumano(gestorTruco.getPuntosGanados());
+                    break;
+                case Ronda.GANA_JUGADOR2:
+                    resultado = "GANADOR " + jugadorMaquina.getNombre();
+                    GestorPuntajes.sumarPuntosMaquina(gestorTruco.getPuntosGanados());
+                    break;
+                default:
+                    resultado = "ALGO ANDA MAL";
+                    break;
             }
             if (jugadorMano == 1) {
                 jugadorMano = 2;
@@ -223,8 +227,7 @@ public class Main {
             jugadorMaquina.soltarCartas();
             System.out.println(ronda.printResultados(jugadorHumano, jugadorMaquina));
             op = JOptionPane.showOptionDialog(graficador.getV(),
-                    resultado + "\n" + ronda.printResultados(jugadorHumano, jugadorMaquina)
-                            + "\n�Desea volver a jugar?",
+                    resultado + "\n�Desea volver a jugar?",
                     "Ronda Finalizada", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
         } while (op != 1);
     }
