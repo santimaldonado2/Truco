@@ -27,4 +27,10 @@ public class Arbol {
         codigo += cartaJugada.generarCodigo();
         raiz = raiz.hijos.get(codigo);
     }
+
+    public double getProbabilidadHijo(Carta cartaJugada){
+        String codigo = raiz.getMesa().generarCodigoMesa();
+        codigo += cartaJugada.generarCodigo();
+        return raiz.hijos.get(codigo).getProbabilidad();
+    }
 }

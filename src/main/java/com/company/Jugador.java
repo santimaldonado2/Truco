@@ -7,7 +7,7 @@ import com.company.utils.LinearRegression;
 
 /**
  * Representa un Jugador para el juego del 7 y medio.
- * 
+ *
  * @author Ing. Valerio Frittelli.
  * @version Mayo de 2011.
  */
@@ -135,7 +135,7 @@ public class Jugador {
 
     /**
      * M�todo accesor. Retorna el nombre del jugador.
-     * 
+     *
      * @return el nombre del jugador.
      */
     public String getNombre() {
@@ -144,9 +144,8 @@ public class Jugador {
 
     /**
      * M�todo accesor. Define el nombre del jugador.
-     * 
-     * @param n
-     *            el nombre del jugador.
+     *
+     * @param n el nombre del jugador.
      */
     public void setNombre(String n) {
         nombre = n;
@@ -154,7 +153,7 @@ public class Jugador {
 
     /**
      * M�todo accesor. Retorna el puntaje del jugador.
-     * 
+     *
      * @return el puntaje del jugador.
      */
     public float getPuntaje() {
@@ -163,9 +162,8 @@ public class Jugador {
 
     /**
      * M�todo accesor. Define el puntaje del jugador.
-     * 
-     * @param punt
-     *            el puntaje del jugador.
+     *
+     * @param punt el puntaje del jugador.
      */
     public void setPuntaje(int punt) {
         puntaje = punt;
@@ -173,9 +171,8 @@ public class Jugador {
 
     /**
      * Permite a los jugadores recibir una carta.
-     * 
-     * @param c
-     *            la carta que reciben.
+     *
+     * @param c la carta que reciben.
      */
     public void recibir(Carta c) {
         cartas.addLast(c);
@@ -208,7 +205,7 @@ public class Jugador {
     /**
      * M�todo que se utiliza para que otros jugadores definidos por el
      * programa jueguen autom�ticamente.
-     * 
+     *
      * @return la situacion del jugador.
      */
 
@@ -345,7 +342,7 @@ public class Jugador {
      * supere la confianza devuelve falso. Todo es generado con un nivel de
      * confianza inicial y luego es calculado mediante un numero random y una
      * semilla tambien random.
-     * 
+     *
      * @return true si juega el envido, false en cualquier otro caso.
      */
     public boolean mentir(double nivel_mentira) {
@@ -359,9 +356,8 @@ public class Jugador {
 
     /**
      * Determina si la maquina si juega el envido o no con los puntos que tiene.
-     * 
-     * @param puntos
-     *            puntos que tiene la maquina para jugar el envido.
+     *
+     * @param puntos puntos que tiene la maquina para jugar el envido.
      * @return true si juega el envido, false en cualquier otro caso.
      */
     public boolean jugarEnvidoEnBaseAPuntosRegresionLineal(double puntos) {
@@ -378,9 +374,8 @@ public class Jugador {
 
     /**
      * Determina si la maquina si juega el envido o no con los puntos que tiene.
-     * 
-     * @param puntos
-     *            puntos que tiene la maquina para jugar el envido.
+     *
+     *
      * @return true si juega el envido, false en cualquier otro caso.
      */
     public boolean jugarEnvidoEnBaseAPuntosRegresionLineal() {
@@ -394,14 +389,14 @@ public class Jugador {
     public boolean subirEnvido(int nivel) {
         double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido);
         switch (nivel) {
-        case 1:
-            return prob >= this.confianza_envido_envido || mentir(nivel_mentira_envido);
-        case 2:
-            return prob >= this.confianza_real_envido || mentir(nivel_mentira_envido);
-        case 3:
-            return prob >= this.confianza_falta_envido || mentir(nivel_mentira_envido);
-        default:
-            return false;
+            case 1:
+                return prob >= this.confianza_envido_envido || mentir(nivel_mentira_envido);
+            case 2:
+                return prob >= this.confianza_real_envido || mentir(nivel_mentira_envido);
+            case 3:
+                return prob >= this.confianza_falta_envido || mentir(nivel_mentira_envido);
+            default:
+                return false;
         }
 
     }
@@ -409,16 +404,16 @@ public class Jugador {
     public boolean aceptarEnvido(int nivel) {
         double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido);
         switch (nivel) {
-        case 1:
-            return prob >= this.confianza_envido;
-        case 2:
-            return prob >= this.confianza_envido_envido;
-        case 3:
-            return prob >= this.confianza_real_envido;
-        case 4:
-            return prob >= this.confianza_falta_envido;
-        default:
-            return false;
+            case 1:
+                return prob >= this.confianza_envido;
+            case 2:
+                return prob >= this.confianza_envido_envido;
+            case 3:
+                return prob >= this.confianza_real_envido;
+            case 4:
+                return prob >= this.confianza_falta_envido;
+            default:
+                return false;
         }
 
     }
@@ -434,9 +429,7 @@ public class Jugador {
             System.out.println("Prob Reg:" + LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido));
             System.out.println("puntos : " + puntosEnvido);
             return ACEPTAR;
-        }
-
-        else {
+        } else {
             System.out.println("RECHAZADO");
             System.out.println("Prob Reg:" + LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido));
             System.out.println("puntos : " + puntosEnvido);
@@ -444,5 +437,68 @@ public class Jugador {
         }
 
     }
+
+    private double getProbabildadHijos(Arbol arbol){
+        double prob = 0.0;
+        for (Nodo hijo : arbol.getRaiz().getHijos().values()) {
+            if (hijo.getProbabilidad() >= prob) {
+                prob = hijo.getProbabilidad();
+
+            }
+        }
+        return prob;
+    }
+
+    private double getProbabilidadNietos(Ronda ronda,Arbol arbol){
+        Mesa mesa = arbol.getRaiz().getMesa();
+        double prob = 0.0;
+        Carta cartaJugadaHumano = ronda.getUltimaCartaHumano();
+        for (Carta carta : cartas) {
+            Nodo hijo = arbol.getRaiz().getHijos()
+                    .get(String.format("%s%s", mesa.generarCodigoMesa(), carta.generarCodigo()));
+            Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(),
+                    carta.generarCodigo(), cartaJugadaHumano.generarCodigo()));
+
+            if (nieto.getProbabilidad() > prob) {
+                prob = nieto.getProbabilidad();
+            }
+        }
+
+        return prob;
+    }
+
+    public boolean cantarTrucoEnBaseAProbabilidad(Arbol arbol,Ronda ronda,boolean soyPrimero) {
+        double prob = 0.0;
+        if(soyPrimero){
+            prob = this.getProbabildadHijos(arbol);
+        }
+        else{
+            prob = this.getProbabilidadNietos(ronda,arbol);
+        }
+
+        if (this.confianza_truco < prob)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean  responderTruco(Arbol arbol,Ronda ronda,boolean pcYaJugo){
+        double prob = 0.0;
+        Carta cartaJugada = ronda.getCartaJugada(ronda.getMano(),ronda.GANA_JUGADOR2);
+        if(pcYaJugo){
+            prob = arbol.getProbabilidadHijo(cartaJugada);
+        }
+        else {
+            prob = this.getProbabildadHijos(arbol);
+        }
+        if (this.confianza_truco < prob)
+            return true;
+        else
+            return false;
+    }
+
+
+
+
 
 }

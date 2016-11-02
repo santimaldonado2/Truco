@@ -278,4 +278,8 @@ public class Ronda {
     public boolean pcEsPrimeraEnMano() {
         return this.jugadorTurno == GANA_JUGADOR2 && this.getCartaJugada(this.mano, GANA_JUGADOR1) == null;
     }
+
+    public boolean pcJugoEnEstaMano(){
+        return this.getCartaJugada(this.mano, GANA_JUGADOR2) != null;
+    }
 }

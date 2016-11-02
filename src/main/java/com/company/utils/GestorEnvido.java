@@ -35,6 +35,11 @@ public class GestorEnvido {
 
     private int puntosGanados;
 
+    private Jugador jugadorHumano, jugadorMaquina;
+    private int jugadorMano;
+
+    private Graficador graficador;
+
     public GestorEnvido(Jugador jugadorHumano, Jugador jugadorMaquina, int jugadorMano, Graficador graficador) {
         this.jugadorHumano = jugadorHumano;
         this.jugadorMaquina = jugadorMaquina;
@@ -42,11 +47,6 @@ public class GestorEnvido {
         this.graficador = graficador;
         this.estado = SIN_CANTAR;
     }
-
-    private Jugador jugadorHumano, jugadorMaquina;
-    private int jugadorMano;
-
-    private Graficador graficador;
 
     public int getJugadorCantador() {
         return jugadorCantador;
