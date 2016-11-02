@@ -15,8 +15,8 @@ public class Ronda {
         return resultados;
     }
 
-
-    public Ronda(Carta[][] mesa, int[] resultados, int mano, int jugadorMano, int jugadorTurno, int resultado, int estadoMano, int estado) {
+    public Ronda(Carta[][] mesa, int[] resultados, int mano, int jugadorMano, int jugadorTurno, int resultado,
+            int estadoMano, int estado) {
         this.mesa = mesa;
         this.resultados = resultados;
         this.mano = mano;
@@ -41,14 +41,14 @@ public class Ronda {
         return sb.toString();
     }
 
-    private String getGanadorMano(int codigoGanador, Jugador humano, Jugador maquina){
-        if(codigoGanador == 0){
+    private String getGanadorMano(int codigoGanador, Jugador humano, Jugador maquina) {
+        if (codigoGanador == 0) {
             return "Empate";
         }
-        if(codigoGanador == 1){
+        if (codigoGanador == 1) {
             return humano.getNombre();
         }
-        if(codigoGanador == 2){
+        if (codigoGanador == 2) {
             return maquina.getNombre();
         }
 
@@ -123,69 +123,62 @@ public class Ronda {
         this.resultado = resultado;
     }
 
-    public void cambiarEstadoMano()
-    {
-        if (this.getCartaJugada(mano,1) != null && this.getCartaJugada(mano,2) != null)
-        {
+    public void cambiarEstadoMano() {
+        if (this.getCartaJugada(mano, 1) != null && this.getCartaJugada(mano, 2) != null) {
             this.estadoMano = FINALIZADA;
-        }
-        else{
+        } else {
             this.estadoMano = EN_JUEGO;
         }
     }
 
-    public void avanzarMano()
-    {
+    public void avanzarMano() {
         this.evaluarMano(this.mano);
         this.evaluarRonda();
-        this.mano ++;
+        this.mano++;
         this.estadoMano = EN_JUEGO;
     }
 
     public static final int PRIMERA = 1;
     public static final int SEGUNDA = 2;
     public static final int TERCERA = 3;
-    
-    public Carta getCartaJugada(int mano, int jugador){
-        return this.mesa[mano - 1][jugador -1];
+
+    public Carta getCartaJugada(int mano, int jugador) {
+        return this.mesa[mano - 1][jugador - 1];
     }
-    
-    private void setCartaJugada(int mano, int jugador,Carta c) {
+
+    private void setCartaJugada(int mano, int jugador, Carta c) {
         this.mesa[mano - 1][jugador - 1] = c;
     }
-    
 
     public void evaluarMano(int mano) {
-        if (this.getCartaJugada(mano,1).compareTo(this.getCartaJugada(mano,2)) > 0) {
-            this.resultados[mano-1] = GANA_JUGADOR1;
+        if (this.getCartaJugada(mano, 1).compareTo(this.getCartaJugada(mano, 2)) > 0) {
+            this.resultados[mano - 1] = GANA_JUGADOR1;
             this.jugadorTurno = GANA_JUGADOR1;
         } else {
-            if ((this.getCartaJugada(mano,1).compareTo(this.getCartaJugada(mano,2)) == 0)) {
-                this.resultados[mano-1] = EMPATE;
+            if ((this.getCartaJugada(mano, 1).compareTo(this.getCartaJugada(mano, 2)) == 0)) {
+                this.resultados[mano - 1] = EMPATE;
             } else {
-                this.resultados[mano-1] = GANA_JUGADOR2;
+                this.resultados[mano - 1] = GANA_JUGADOR2;
                 this.jugadorTurno = GANA_JUGADOR2;
             }
 
         }
     }
 
-    public void jugarCarta(Carta c)
-    {
-        this.setCartaJugada(this.mano,jugadorTurno,c);
-        if(this.jugadorTurno == GANA_JUGADOR1){
+    public void jugarCarta(Carta c) {
+        this.setCartaJugada(this.mano, jugadorTurno, c);
+        if (this.jugadorTurno == GANA_JUGADOR1) {
             this.jugadorTurno = GANA_JUGADOR2;
-        }
-        else {
+        } else {
             this.jugadorTurno = GANA_JUGADOR1;
         }
         cambiarEstadoMano();
     }
-    
-    public int getResultadoMano(int mano)
-    {
-        return this.resultados[mano -1];
+
+    public int getResultadoMano(int mano) {
+        return this.resultados[mano - 1];
     }
+
     public void evaluarRonda() {
         if (mano == SEGUNDA) {
             if (getResultadoMano(PRIMERA) == GANA_JUGADOR1) {
@@ -193,8 +186,7 @@ public class Ronda {
                     this.resultado = GANA_JUGADOR1;
                     this.estado = FINALIZADA;
                 }
-            }
-            else {
+            } else {
                 if (getResultadoMano(PRIMERA) == EMPATE) {
                     if (getResultadoMano(SEGUNDA) != EMPATE) {
                         this.resultado = getResultadoMano(SEGUNDA);
@@ -208,17 +200,14 @@ public class Ronda {
                 }
             }
 
-
         }
         if (mano == TERCERA) {
             if (getResultadoMano(TERCERA) != EMPATE) {
                 this.resultado = getResultadoMano(TERCERA);
-            }
-            else{
-                if(getResultadoMano(PRIMERA) != EMPATE){
+            } else {
+                if (getResultadoMano(PRIMERA) != EMPATE) {
                     this.resultado = getResultadoMano(PRIMERA);
-                }
-                else{
+                } else {
                     this.resultado = this.jugadorMano;
                 }
             }
@@ -230,8 +219,7 @@ public class Ronda {
     public Ronda() {
     }
 
-    public void init(int jugMano)
-    {
+    public void init(int jugMano) {
         this.mesa = new Carta[3][2];
         this.jugadorMano = jugMano;
         this.estado = ACTIVA;
@@ -240,55 +228,54 @@ public class Ronda {
         this.estadoMano = EN_JUEGO;
         this.resultados = new int[3];
     }
-    public String toString(){
-        StringBuilder  sb = new StringBuilder();
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
         sb.append("Jugador Humano\n");
         sb.append("----------\n");
-        for (int i = 1; i <4 ; i++) {
-            if (this.getCartaJugada(i,1) == null)
-            {
+        for (int i = 1; i < 4; i++) {
+            if (this.getCartaJugada(i, 1) == null) {
                 sb.append("VACIO\n");
-            }
-            else {
-                sb.append(this.getCartaJugada(i,1)+"\n");
+            } else {
+                sb.append(this.getCartaJugada(i, 1) + "\n");
             }
         }
         sb.append("+++++++++++++++\n");
         sb.append("Jugador Maquina\n");
         sb.append("----------\n");
-        for (int i = 1; i <4 ; i++) {
-            if (this.getCartaJugada(i,2) == null)
-            {
+        for (int i = 1; i < 4; i++) {
+            if (this.getCartaJugada(i, 2) == null) {
                 sb.append("VACIO\n");
-            }
-            else {
-                sb.append(this.getCartaJugada(i,2)+"\n");
+            } else {
+                sb.append(this.getCartaJugada(i, 2) + "\n");
             }
         }
 
         return sb.toString();
     }
 
-    public Ronda clone(){
+    @Override
+    public Ronda clone() {
         Carta[][] mesa = new Carta[3][2];
-        for (int i = 0; i <mesa.length ; i++) {
+        for (int i = 0; i < mesa.length; i++) {
             mesa[i] = this.mesa[i].clone();
         }
-        Ronda clon = new Ronda(mesa,
-                                this.resultados.clone(),this.mano,this.jugadorMano,this.jugadorTurno,this.resultado,this.estadoMano,this.estado);
+        Ronda clon = new Ronda(mesa, this.resultados.clone(), this.mano, this.jugadorMano, this.jugadorTurno,
+                this.resultado, this.estadoMano, this.estado);
         return clon;
     }
 
-    public Carta getUltimaCartaHumano(){
+    public Carta getUltimaCartaHumano() {
         for (int i = 2; i >= 0; i--) {
-            if(mesa[i][0]  != null){
+            if (mesa[i][0] != null) {
                 return mesa[i][0];
             }
         }
         return null;
     }
 
-    public boolean pcEsPrimeraEnMano(){
-        return this.jugadorTurno == this.GANA_JUGADOR2 && this.getCartaJugada(this.mano,this.GANA_JUGADOR1) == null;
+    public boolean pcEsPrimeraEnMano() {
+        return this.jugadorTurno == GANA_JUGADOR2 && this.getCartaJugada(this.mano, GANA_JUGADOR1) == null;
     }
 }

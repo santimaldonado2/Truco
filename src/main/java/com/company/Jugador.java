@@ -21,7 +21,6 @@ public class Jugador {
     public static final int RECHAZAR = 1;
     public static final int SUBIR = 2;
 
-
     /**
      * El puntaje que posee el jugador a medida que recibe las cartas.
      */
@@ -41,7 +40,10 @@ public class Jugador {
     private double confianza_real_envido;
     private double confianza_falta_envido;
 
-    private double nivel_mentira;
+    private double confianza_truco;
+
+    private double nivel_mentira_envido;
+    private double nivel_mentira_truco;
 
     private int puntosEnvido;
 
@@ -108,11 +110,27 @@ public class Jugador {
     }
 
     public double getNivel_mentira() {
-        return nivel_mentira;
+        return nivel_mentira_envido;
     }
 
     public void setNivel_mentira(double nivel_mentira) {
-        this.nivel_mentira = nivel_mentira;
+        this.nivel_mentira_envido = nivel_mentira;
+    }
+
+    public double getNivel_mentira_truco() {
+        return nivel_mentira_truco;
+    }
+
+    public void setNivel_mentira_truco(double nive_mentira_truco) {
+        this.nivel_mentira_truco = nive_mentira_truco;
+    }
+
+    public double getConfianza_truco() {
+        return confianza_truco;
+    }
+
+    public void setConfianza_truco(double confianza_truco) {
+        this.confianza_truco = confianza_truco;
     }
 
     /**
@@ -162,8 +180,6 @@ public class Jugador {
     public void recibir(Carta c) {
         cartas.addLast(c);
     }
-
-
 
     public int getPuntosEnvido() {
         return puntosEnvido;
@@ -332,7 +348,7 @@ public class Jugador {
      * 
      * @return true si juega el envido, false en cualquier otro caso.
      */
-    public boolean jugarEnvido() {
+    public boolean mentir(double nivel_mentira) {
 
         double seed = Math.random();
         Random random = new Random();
@@ -355,6 +371,11 @@ public class Jugador {
         return confianza_envido < prob;
     }
 
+    public boolean jugarTrucoEnBaseAProbabiliadDeSiguienteMano(double prob) {
+
+        return confianza_truco < prob;
+    }
+
     /**
      * Determina si la maquina si juega el envido o no con los puntos que tiene.
      * 
@@ -370,46 +391,52 @@ public class Jugador {
         return confianza_envido < prob;
     }
 
-    public boolean subirEnvido(int nivel){
+    public boolean subirEnvido(int nivel) {
         double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido);
-        switch (nivel){
-            case 1: return prob>= this.confianza_envido_envido || jugarEnvido();
-            case 2: return prob>= this.confianza_real_envido|| jugarEnvido();
-            case 3: return prob>= this.confianza_falta_envido|| jugarEnvido();
-            default: return false;
+        switch (nivel) {
+        case 1:
+            return prob >= this.confianza_envido_envido || mentir(nivel_mentira_envido);
+        case 2:
+            return prob >= this.confianza_real_envido || mentir(nivel_mentira_envido);
+        case 3:
+            return prob >= this.confianza_falta_envido || mentir(nivel_mentira_envido);
+        default:
+            return false;
         }
 
     }
 
-    public boolean aceptarEnvido(int nivel){
+    public boolean aceptarEnvido(int nivel) {
         double prob = LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido);
-        switch (nivel){
-            case 1: return prob>= this.confianza_envido;
-            case 2: return prob>= this.confianza_envido_envido;
-            case 3: return prob>= this.confianza_real_envido;
-            case 4: return prob>= this.confianza_falta_envido;
-            default: return false;
+        switch (nivel) {
+        case 1:
+            return prob >= this.confianza_envido;
+        case 2:
+            return prob >= this.confianza_envido_envido;
+        case 3:
+            return prob >= this.confianza_real_envido;
+        case 4:
+            return prob >= this.confianza_falta_envido;
+        default:
+            return false;
         }
-
-
 
     }
 
-    public int responderEnvido(int nivel){
-        if (subirEnvido(nivel)){
+    public int responderEnvido(int nivel) {
+        if (subirEnvido(nivel)) {
             System.out.println("Subido");
             System.out.println("Prob Reg:" + LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido));
             System.out.println("puntos : " + puntosEnvido);
             return SUBIR;
-        }
-        else if (aceptarEnvido(nivel)) {
+        } else if (aceptarEnvido(nivel)) {
             System.out.println("ACEPTADO");
             System.out.println("Prob Reg:" + LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido));
             System.out.println("puntos : " + puntosEnvido);
             return ACEPTAR;
         }
 
-        else{
+        else {
             System.out.println("RECHAZADO");
             System.out.println("Prob Reg:" + LinearRegression.calcularProbabilidadGanarEnvido(puntosEnvido));
             System.out.println("puntos : " + puntosEnvido);
