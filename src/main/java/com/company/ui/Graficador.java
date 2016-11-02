@@ -13,6 +13,7 @@ public class Graficador {
 
     private Color mantel = new Color(13, 143, 15);
     private Color marron = new Color(54, 36, 1);
+    private Color apoyadores = new Color(11, 96, 13);
 
     private Font titulo = new Font("Arial", Font.BOLD, 30);
 
@@ -49,7 +50,7 @@ public class Graficador {
     }
 
     private void dibujarCarta(Carta carta, boolean humano, boolean oculta, int posicion) {
-        int x = v.getWidth() / 5 + (posicion * 150);
+        int x = v.getWidth() / 5 + (posicion * 200);
         int y;
         if (!humano) {
             y = v.getHeight() / 20;
@@ -69,14 +70,16 @@ public class Graficador {
         int anchoTotal = v.getWidth();
         int altoTotal = v.getHeight();
         v.setColor(mantel);
+        v.setColor(apoyadores);
+
         if (humano) {
-            v.fillRoundRect(anchoTotal / 5, altoTotal / 20 * 14, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.fillRoundRect(anchoTotal / 5, altoTotal / 20 * 14, 520, 170, 10, 10);
             v.setColor(marron);
-            v.drawRoundRect(anchoTotal / 5, altoTotal / 20 * 14, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.drawRoundRect(anchoTotal / 5, altoTotal / 20 * 14, 520, 170, 10, 10);
         } else {
-            v.fillRoundRect(anchoTotal / 5, altoTotal / 20, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.fillRoundRect(anchoTotal / 5, altoTotal / 20, 520, 170, 10, 10);
             v.setColor(marron);
-            v.drawRoundRect(anchoTotal / 5, altoTotal / 20, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.drawRoundRect(anchoTotal / 5, altoTotal / 20, 520, 170, 10, 10);
         }
 
         int i = 0;
@@ -102,7 +105,7 @@ public class Graficador {
     }
 
     private void dibujarCartaEnMesa(Carta carta, boolean humano, int posicion) {
-        int x = v.getWidth() / 20 * 5 + (posicion * 150);
+        int x = v.getWidth() / 30 * 7 + (posicion * 150);
         int y;
         if (!humano) {
             y = v.getHeight() / 20 * 5;
