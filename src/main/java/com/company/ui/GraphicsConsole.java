@@ -43,7 +43,7 @@ public class GraphicsConsole extends JFrame
     // constructor privado... Singleton Pattern.
     private GraphicsConsole()
     {
-        super( "Consola Gr�fica - Versi�n 1.0 (Beta)" );
+        super("Truco Argentino - Inteligencia Artificial" );
         this.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );        
         this.setMenu();
         this.setInitialLook();
