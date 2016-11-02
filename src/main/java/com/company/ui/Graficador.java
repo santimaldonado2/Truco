@@ -5,6 +5,7 @@ import com.company.Jugador;
 
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Graficador {
 
@@ -13,6 +14,7 @@ public class Graficador {
 
     private Color mantel = new Color(13, 143, 15);
     private Color marron = new Color(54, 36, 1);
+    private Color apoyadores = new Color(11, 96, 13);
 
     private Font titulo = new Font("Arial", Font.BOLD, 30);
 
@@ -49,7 +51,7 @@ public class Graficador {
     }
 
     private void dibujarCarta(Carta carta, boolean humano, boolean oculta, int posicion) {
-        int x = v.getWidth() / 5 + (posicion * 150);
+        int x = v.getWidth() / 5 + (posicion * 200);
         int y;
         if (!humano) {
             y = v.getHeight() / 20;
@@ -69,14 +71,16 @@ public class Graficador {
         int anchoTotal = v.getWidth();
         int altoTotal = v.getHeight();
         v.setColor(mantel);
+        v.setColor(apoyadores);
+
         if (humano) {
-            v.fillRoundRect(anchoTotal / 5, altoTotal / 20 * 14, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.fillRoundRect(anchoTotal / 5, altoTotal / 20 * 14, 520, 170, 10, 10);
             v.setColor(marron);
-            v.drawRoundRect(anchoTotal / 5, altoTotal / 20 * 14, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.drawRoundRect(anchoTotal / 5, altoTotal / 20 * 14, 520, 170, 10, 10);
         } else {
-            v.fillRoundRect(anchoTotal / 5, altoTotal / 20, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.fillRoundRect(anchoTotal / 5, altoTotal / 20, 520, 170, 10, 10);
             v.setColor(marron);
-            v.drawRoundRect(anchoTotal / 5, altoTotal / 20, anchoTotal / 10 * 3, altoTotal / 6, 10, 10);
+            v.drawRoundRect(anchoTotal / 5, altoTotal / 20, 520, 170, 10, 10);
         }
 
         int i = 0;
@@ -102,7 +106,7 @@ public class Graficador {
     }
 
     private void dibujarCartaEnMesa(Carta carta, boolean humano, int posicion) {
-        int x = v.getWidth() / 20 * 5 + (posicion * 150);
+        int x = v.getWidth() / 30 * 7 + (posicion * 150);
         int y;
         if (!humano) {
             y = v.getHeight() / 20 * 5;
@@ -125,6 +129,25 @@ public class Graficador {
         v.setColor(Color.black);
         v.drawString("Puntos: " + puntosMaquina, anchoTotal / 10 * 6, altoTotal / 20 * 3);
         v.drawString("Puntos: " + puntosHumano, anchoTotal / 10 * 6, altoTotal / 20 * 16);
+    }
+
+    public void dibujarProbabilidades(Map<Carta, Float> probabilidades) {
+        int anchoTotal = v.getWidth();
+        int altoTotal = v.getHeight();
+        int i = 0;
+        v.setColor(mantel);
+        v.fillRect(anchoTotal / 10 * 8 + 40, 0, anchoTotal / 10*2, altoTotal);
+
+        v.setFont(dato);
+        v.setColor(Color.black);
+
+        for (Map.Entry<Carta, Float> entry : probabilidades.entrySet()) {
+            Carta carta = entry.getKey();
+            Object value = entry.getValue();
+            String string = carta.toString() + ": " + value;
+            v.drawString(string, anchoTotal / 10 * 8 + 50, altoTotal / 20 * 3 + i * 30);
+            i++;
+        }
     }
 }
 

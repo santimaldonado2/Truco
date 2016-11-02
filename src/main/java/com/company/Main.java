@@ -33,6 +33,9 @@ public class Main {
         // seteamos el nivel de confianza para jugar al truco
         jugadorMaquina.setConfianza_truco(0.632);
 
+        // seteamos si queremos ver las probabilidades de la maquina o no
+        boolean mostrarProbabilidadesMaquina = false;
+
         GestorPuntajes.init();
 
         int op;
@@ -69,13 +72,12 @@ public class Main {
 
             Arbol arbol = new Arbol(new Nodo(jugadorMaquina.getCartas(), new Mesa(), nuevaBaraja, false));
             arbol.generarArbol();
-
+            if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, true)); }
             while (ronda.getEstado() == Ronda.ACTIVA && gestorTruco.getEstado() != GestorTruco.FINALIZADO ) {
 
                 while (ronda.getEstadoMano() == Ronda.EN_JUEGO && gestorTruco.getEstado() != GestorTruco.FINALIZADO) {
 
                     if (ronda.getJugadorTurno() == 1) {
-
                         System.out.println("Su turno " + jugadorHumano.getNombre());
                         System.out.println("Estas son sus cartas");
 
@@ -124,9 +126,9 @@ public class Main {
                         System.out.println(ronda);
 
                         graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
-
+                        if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano())); }
                     } else {
-
+                        if (mostrarProbabilidadesMaquina){ graficador.dibujarProbabilidades(jugadorMaquina.getProbabilidades(ronda, arbol, ronda.pcEsPrimeraEnMano())); }
                         // Calculo el puntaje del envido en esta mano
                         // Aca voy a decidir si canto envido o no
                         if (ronda.getMano() == Ronda.PRIMERA) {
