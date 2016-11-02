@@ -1,6 +1,8 @@
 package com.company;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 import com.company.utils.LinearRegression;
@@ -379,7 +381,6 @@ public class Jugador {
     /**
      * Determina si la maquina si juega el envido o no con los puntos que tiene.
      * 
-     * @param puntos
      *            puntos que tiene la maquina para jugar el envido.
      * @return true si juega el envido, false en cualquier otro caso.
      */
@@ -443,6 +444,31 @@ public class Jugador {
             return RECHAZAR;
         }
 
+    }
+
+    public Map<Carta, Float> getProbabilidades(Ronda ronda, Arbol arbol, boolean soyPrimero) {
+        Map<Carta, Float> probabilidades = new HashMap<>();
+        float probCarta;
+        Carta carta;
+        if (soyPrimero) {
+            for (Nodo hijo : arbol.getRaiz().getHijos().values()) {
+                probCarta = hijo.getProbabilidad();
+                carta = hijo.getMesa().getUltimaCartaJugadaMaquina();
+                probabilidades.put(carta, probCarta);
+            }
+        } else {
+            Mesa mesa = arbol.getRaiz().getMesa();
+            Carta cartaJugadaHumano = ronda.getUltimaCartaHumano();
+            for (Carta c : cartas) {
+                Nodo hijo = arbol.getRaiz().getHijos()
+                        .get(String.format("%s%s", mesa.generarCodigoMesa(), c.generarCodigo()));
+                Nodo nieto = hijo.getHijos().get(String.format("%s%s%s", mesa.generarCodigoMesa(), c.generarCodigo(), cartaJugadaHumano.generarCodigo()));
+                probCarta = nieto.getProbabilidad();
+                carta = c;
+                probabilidades.put(carta, probCarta);
+            }
+        }
+        return probabilidades;
     }
 
 }

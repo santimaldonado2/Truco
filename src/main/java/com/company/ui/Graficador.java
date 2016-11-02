@@ -5,6 +5,7 @@ import com.company.Jugador;
 
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Graficador {
 
@@ -128,6 +129,25 @@ public class Graficador {
         v.setColor(Color.black);
         v.drawString("Puntos: " + puntosMaquina, anchoTotal / 10 * 6, altoTotal / 20 * 3);
         v.drawString("Puntos: " + puntosHumano, anchoTotal / 10 * 6, altoTotal / 20 * 16);
+    }
+
+    public void dibujarProbabilidades(Map<Carta, Float> probabilidades) {
+        int anchoTotal = v.getWidth();
+        int altoTotal = v.getHeight();
+        int i = 0;
+        v.setColor(mantel);
+        v.fillRect(anchoTotal / 10 * 8 + 40, 0, anchoTotal / 10*2, altoTotal);
+
+        v.setFont(dato);
+        v.setColor(Color.black);
+
+        for (Map.Entry<Carta, Float> entry : probabilidades.entrySet()) {
+            Carta carta = entry.getKey();
+            Object value = entry.getValue();
+            String string = carta.toString() + ": " + value;
+            v.drawString(string, anchoTotal / 10 * 8 + 50, altoTotal / 20 * 3 + i * 30);
+            i++;
+        }
     }
 }
 
