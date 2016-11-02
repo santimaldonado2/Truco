@@ -3,10 +3,12 @@ package com.company;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sound.sampled.Line;
 import javax.swing.JOptionPane;
 
 import com.company.ui.Graficador;
 import com.company.utils.GestorEnvido;
+import com.company.utils.GestorPuntajes;
 import com.company.utils.LinearRegression;
 
 public class Main {
@@ -18,21 +20,16 @@ public class Main {
         Jugador jugadorMaquina = new Jugador("Jugador Maquina");
 
         // Aca seteamos la confianza de la maquina para jugar.
-        jugadorMaquina.setConfianza_envido(0.60);
-        jugadorMaquina.setConfianza_envido_envido(0.65);
-        jugadorMaquina.setConfianza_real_envido(0.75);
-        jugadorMaquina.setConfianza_falta_envido(0.8);
+        jugadorMaquina.setConfianza_envido(0.655);
+        jugadorMaquina.setConfianza_envido_envido(0.715);
+        jugadorMaquina.setConfianza_real_envido(0.765);
+        jugadorMaquina.setConfianza_falta_envido(0.825);
 
-        jugadorMaquina.setNivel_mentira(0.7);
+        jugadorMaquina.setNivel_mentira(0.735);
 
-        // String opcion;
-        int op = 0;
-        Scanner s = new Scanner(System.in);
-        // System.out.println("Ingrese su nombre");
-        // String nombre = s.nextLine();
-        // String nombre = JOptionPane.showInputDialog(null, "Ingrese su
-        // nombre:");
-        // jugadorHumano.setNombre(nombre);
+        GestorPuntajes.init();
+
+        int op;
         int jugadorMano = 1;
         do {
             // Aca cargamos todas las probabilidades para el calculo de la
@@ -49,16 +46,16 @@ public class Main {
             for (int i = 0; i < 3; i++) {
                 Carta cartaHumano = baraja.pedir();
                 jugadorHumano.recibir(cartaHumano);
-                // graficador.dibujarCarta(cartaHumano, true, i);
 
                 Carta cartaMaquina = baraja.pedir();
                 jugadorMaquina.recibir(cartaMaquina);
-                // graficador.dibujarCarta(cartaMaquina, false, i);
             }
             jugadorMaquina.calcularPuntosEnvido();
             jugadorHumano.calcularPuntosEnvido();
+
             graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
             graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
+            graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
 
             List<Carta> nuevaBaraja = baraja.getMazo();
             nuevaBaraja.addAll(jugadorHumano.getCartas());
@@ -80,9 +77,6 @@ public class Main {
                             index++;
                             System.out.println("[" + index + "]" + c);
                         }
-                        // System.out.println("Ingrese la carta que quiere
-                        // jugar");
-                        // int num_carta = Integer.parseInt(s.nextLine());
                         if (ronda.getMano() == 1) {
                             if (gestorEnvido.getEstado() == GestorEnvido.SIN_CANTAR) {
                                 int cantaEnvido = JOptionPane.showOptionDialog(graficador.getV(),
@@ -94,6 +88,7 @@ public class Main {
                             }
                         }
 
+                        graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
 
                         int num_carta = JOptionPane.showOptionDialog(graficador.getV(),
                                 "Es su turno. ¿Qué carta desea tirar?", "Su turno", JOptionPane.DEFAULT_OPTION,
@@ -101,25 +96,17 @@ public class Main {
                         System.out.println("num_carta: " + num_carta);
                         ronda.jugarCarta(jugadorHumano.jugarCarta(num_carta));
                         System.out.println(ronda);
+                        graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
                     } else {
-
                         // Calculo el puntaje del envido en esta mano
-
-
                         // Aca voy a decidir si canto envido o no
                         if (ronda.getMano() == Ronda.PRIMERA) {
                             if ((gestorEnvido.getEstado() == GestorEnvido.SIN_CANTAR) && (jugadorMaquina.jugarEnvido() || jugadorMaquina.jugarEnvidoEnBaseAPuntosRegresionLineal())) {
                                 gestorEnvido.cantarEnvido(GestorEnvido.JUGADOR_MAQUINA);
                             }
-                            // TODO:aca se juega el envido, habr�a que hacer la
-                            // comparaci�n entre los puntajes y se guarda el
-                            // puntaje en en la DB
-
-                            // LinearRegression.agregarDatos(puntos, ganado);
-
                             System.out.println("La maquina juega el envido");
                         }
-
+                        graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
                         System.out.println("TURNO " + jugadorMaquina.getNombre());
                         int index = 0;
                         for (Carta c : jugadorMaquina.getCartas()) {
@@ -127,10 +114,15 @@ public class Main {
                             System.out.println("[" + index + "]" + c);
                         }
                         ronda.jugarCarta(jugadorMaquina.JuegoAutomatico(ronda, arbol, ronda.pcEsPrimeraEnMano()));
-                        // ronda.jugarCarta(j2.jugarCarta(0));
                         System.out.println(ronda);
+                        graficador.dibujarPuntajes(GestorPuntajes.getPuntosHumano(), GestorPuntajes.getPuntosMaquina());
                         Thread.sleep(2000);
                     }
+                    int puntosEnvidoMaquina = jugadorMaquina.getPuntosEnvido();
+                    int puntosEnvidoHumano = jugadorHumano.getPuntosEnvido();
+                    boolean maquinaGanoEnvido = (puntosEnvidoMaquina > puntosEnvidoHumano) || ((puntosEnvidoMaquina == puntosEnvidoHumano) && (jugadorMano == 2));
+                    LinearRegression.agregarDatos(puntosEnvidoMaquina, maquinaGanoEnvido);
+
                     graficador.dibujarCartasJugador(jugadorHumano.getCartas(), true);
                     graficador.dibujarCartasJugador(jugadorMaquina.getCartas(), false);
                     graficador.dibujarMesa(ronda.getMesa());
@@ -141,21 +133,16 @@ public class Main {
                 arbol.MoverAHijo(ronda.getCartaJugada(ronda.getMano(), 1));
                 ronda.avanzarMano();
             }
-            String resultado = "";
+            String resultado;
             switch (ronda.getResultado()) {
                 case Ronda.GANA_JUGADOR1:
                     resultado = "GANADOR " + jugadorHumano.getNombre();
-                    // System.out.println("GANADOR " +
-                    // jugadorHumano.getNombre());
                     break;
                 case Ronda.GANA_JUGADOR2:
                     resultado = "GANADOR " + jugadorMaquina.getNombre();
-                    // System.out.println("GANADOR " +
-                    // jugadorMaquina.getNombre());
                     break;
                 default:
                     resultado = "ALGO ANDA MAL";
-                    // System.out.println("ALGO ANDA MAL");
                     break;
             }
             if (jugadorMano == 1) {
@@ -169,12 +156,7 @@ public class Main {
                     resultado + "\n" + ronda.printResultados(jugadorHumano, jugadorMaquina)
                             + "\n¿Desea volver a jugar?",
                     "Ronda Finalizada", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-            // System.out.println("Desea Jugar de nuevo? (Ingrese S o s para
-            // jugar de nuevo, cualquier otra cosa para finalizar");
-            // opcion = s.nextLine();
-
         } while (op != 1);
-        // while(opcion != "S" || opcion != "s");
     }
 
 }

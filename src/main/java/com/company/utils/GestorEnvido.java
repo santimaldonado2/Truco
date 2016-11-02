@@ -248,6 +248,12 @@ public class GestorEnvido {
         String ganador= jugadorGanador== JUGADOR_HUMANO? "GANADOR HUMANO" : "GANADOR MAQUINA";
         Object[] options = {"OK"};
 
+        if(jugadorGanador == JUGADOR_HUMANO){
+            GestorPuntajes.sumarPuntosHumano(this.puntosGanados);
+        }else{
+            GestorPuntajes.sumarPuntosMaquina(this.puntosGanados);
+        }
+
          if (aceptado){
              JOptionPane.showOptionDialog(graficador.getV(), ganador +
                              "\n" + "Gano : "+ this.puntosGanados + " puntos"
